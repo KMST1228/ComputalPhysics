@@ -1,0 +1,46 @@
+import pylab as pl
+class nuclei_decay:
+    def __init__(self, number_of_nuclei_a = 100, number_of_nuclei_b = 0,
+                 time_constant_a = 1,time_constant_b = 1, time_of_duration = 10, time_step = 0.1):
+        # unit of time is second
+        self.n_nuclei_a = [number_of_nuclei_a]        
+        self.n_nuclei_b = [number_of_nuclei_b]
+        
+        self.t = [0]
+        self.tau_a = time_constant_a
+        self.tau_b = time_constant_b
+        self.dt = time_step
+        self.time = time_of_duration
+        self.nsteps = int(time_of_duration // time_step + 1)
+        
+        print("Initial number of nuclei A->", number_of_nuclei_a)
+        print("Initial number of nuclei B->", number_of_nuclei_b)
+        print("Time constant of A ->", time_constant_a)        
+        print("Time constant of B ->", time_constant_b)
+        print("time step -> ", time_step)
+        print("total time -> ", time_of_duration)
+    
+    def calculate(self):
+        for i in range(self.nsteps):
+            tmp_a = self.n_nuclei_a[i] - self.n_nuclei_a[i] / self.tau_a * self.dt
+            tmp_b = self.n_nuclei_b[i] + self.n_nuclei_a[i] / self.tau_a * self.dt - self.n_nuclei_b[i] / self.tau_b * self.dt
+            self.n_nuclei_a.append(tmp_a)
+            self.n_nuclei_b.append(tmp_b)
+            self.t.append(self.t[i] + self.dt)
+    
+    def show_results(self):
+        label=["A", "B"]
+        pl.plot(self.t, self.n_nuclei_a)
+        pl.plot(self.t, self.n_nuclei_b)
+        pl.legend(label, loc=0, ncol=2)
+        
+        pl.xlabel('time ($s$)')
+        pl.ylabel('Number of Nuclei')
+        pl.show()
+        
+       
+
+%matplotlib inline
+a = nuclei_decay()
+a.calculate()
+a.show_results()
